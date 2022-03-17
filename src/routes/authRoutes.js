@@ -1,4 +1,5 @@
 import * as React from "react";
+import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/auth/Login";
 import Page404 from "../pages/auth/Page404";
 
