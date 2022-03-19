@@ -1,11 +1,13 @@
 import React from 'react'
 import Router from './routes'
-
+import ThemeConfig from './theme'
+import GlobalStyles from './theme/globalStyles'
 const App = () => {
   return (
-    <div className="App">
+    <ThemeConfig>
+      <GlobalStyles/>
       <Router/>
-    </div>
+    </ThemeConfig>
   )
 }
 

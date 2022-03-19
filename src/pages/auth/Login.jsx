@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Card,
@@ -6,58 +6,147 @@ import {
   Stack,
   Avatar,
   Input,
-  FormControl,
   InputAdornment,
-  Button,
+  Typography,
+  IconButton,
 } from "@mui/material";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import { AccountCircle } from "@mui/icons-material";
-// import FormControl from "@mui/material/FormControl";
+import EmailIcon from "@mui/icons-material/Email";
+import InputWrapper from "../../components/InputWrapper";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { useForm, Controller } from "react-hook-form";
+import { EMAIL_REGEX } from "../../helpers";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import LockIcon from "@mui/icons-material/Lock";
 
 const Login = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    reValidateMode: "onChange",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  const handleLogin = (data) => {
+    // localStorage.setItem('token', 'admin');
+    setLoading(true);
+  };
   return (
     <Container
-      sx={{
-        width: "100%",
+      style={{
+        minHeight: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <Card sx={{ p: 2, minWidth: 300 }}>
+      <Card style={{ padding: 4, minWidth: 300 }}>
         <CardContent>
-          <Stack direction="column" spacing={6}>
+          <Stack direction="column" spacing={8}>
             <Avatar
-              sx={{ bgColor: "lightgreen", alignSelf: "center" }}
+              style={{ backgroundColor: "lightgreen", alignSelf: "center" }}
               variant="rounded"
             >
-              <AssignmentIcon />
+              <EmailIcon />
             </Avatar>
-            <Stack direction="column" spacing={4}>
-              <FormControl variant="standard">
-                <Input
-                  placeholder="Email"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <AccountCircle />
-                    </InputAdornment>
-                  }
+            <Stack direction="column" spacing={5}>
+              <InputWrapper error={errors?.email?.message}>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field: { ref, onChange, ...rest } }) => (
+                    <Input
+                      onChange={(e) => {
+                        setError("");
+                        onChange(e);
+                      }}
+                      {...rest}
+                      error={errors?.email}
+                      type="text"
+                      placeholder="Enter Your Email"
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <EmailIcon />
+                        </InputAdornment>
+                      }
+                    />
+                  )}
+                  rules={{
+                    required: { value: true, message: "Required" },
+                    pattern: { value: EMAIL_REGEX, message: "Invalid Email" },
+                  }}
                 />
-              </FormControl>
-              <FormControl variant="standard">
-                <Input
-                  placeholder="Password"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <AccountCircle />
-                    </InputAdornment>
-                  }
+              </InputWrapper>
+
+              <InputWrapper error={errors?.password?.message}>
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field: { ref, onChange, ...rest } }) => (
+                    <Input
+                      onChange={(e) => {
+                        setError("");
+                        onChange(e);
+                      }}
+                      {...rest}
+                      error={errors?.password}
+                      placeholder="Enter Your Password"
+                      type={showPassword ? "text" : "password"}
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <LockIcon />
+                        </InputAdornment>
+                      }
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  )}
+                  rules={{
+                    required: { value: true, message: "Required" },
+                    minLength: { value: 8, message: "Length should be 8-20" },
+                    maxLength: { value: 20, message: "Length should be 8-20" },
+                  }}
                 />
-              </FormControl>
+              </InputWrapper>
             </Stack>
-            <Button loading loadingPosition="start" variant="contained">
-              Save
-            </Button>
+            {error && (
+              <Typography
+                sx={{
+                  fontSize: "12px",
+                  marginBottom: 0,
+                  marginTop: 1,
+                  color: "#e55353",
+                }}
+                className="error"
+              >
+                {error}
+              </Typography>
+            )}
+
+            <LoadingButton
+              loading={loading}
+              style={{ marginTop: "50px" }}
+              variant="contained"
+              onClick={handleSubmit(handleLogin)}
+            >
+              Login
+            </LoadingButton>
           </Stack>
         </CardContent>
       </Card>

@@ -9,12 +9,13 @@ const authRoutes = [
         element: <AuthLayout />,
         children: [
             {
-                path: "login",
-                element: <Login />
+                path: "/", element: <Login />
+            },
+            {
+                path: "*", element: <Page404 />
             }
         ]
     },
-    { path: "*", element: <Page404 /> },
 ]
 
 
