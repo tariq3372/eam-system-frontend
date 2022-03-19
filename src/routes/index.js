@@ -5,7 +5,7 @@ import adminRoutes from "./adminRoutes";
 
 const Router = () => {
   const token = localStorage.getItem('token');
-  return useRoutes(authRoutes);
+  return useRoutes(token? adminRoutes: authRoutes);
 }
 
 export default Router;
