@@ -6,7 +6,13 @@ import Page404 from "../pages/auth/Page404";
 const authRoutes = [
     {
         path: "/",
-        element: <Login />,
+        element: <AuthLayout />,
+        children: [
+            {
+                path: "login",
+                element: <Login />
+            }
+        ]
     },
     { path: "*", element: <Page404 /> },
 ]

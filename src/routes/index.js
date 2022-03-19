@@ -3,6 +3,7 @@ import { useRoutes } from "react-router-dom";
 import authRoutes from "./authRoutes";
 
 const Router = () => {
+  const token = localStorage.getItem('token');
   return useRoutes(authRoutes);
 
 }
