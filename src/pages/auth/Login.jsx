@@ -35,7 +35,7 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
   const handleLogin = (data) => {
-    // localStorage.setItem('token', 'admin');
+    localStorage.setItem('token', 'admin');
     setLoading(true);
   };
   return (

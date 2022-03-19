@@ -1,8 +1,30 @@
-import React from 'react'
+import { Button, Card, CardContent, Stack, Typography } from '@mui/material';
+import React, { useState } from 'react'
+import AddDepartmentModal from '../../components/Departments/AddDepartmentModal';
+
 
 const Departments = () => {
+  const [showAddModal, setShowAddModal] = useState(false)
+  const renderAddDepartmentModal = () => ( showAddModal && 
+    <AddDepartmentModal
+    onClose={setShowAddModal(false)}
+    />
+  );
   return (
-    <div>Departments</div>
+    <>
+    {renderAddDepartmentModal()}
+    <Card>
+      <CardContent>
+        <Stack direction="row" spacing="auto">
+          <Typography> Add New Department </Typography>
+          <Button onClick={() => setShowAddModal(true)} variant="contained" >Add</Button>
+        </Stack>
+      </CardContent>
+    </Card>
+
+    {/* Data Table */}
+
+    </>
   )
 }
 
