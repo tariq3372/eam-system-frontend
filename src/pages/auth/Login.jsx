@@ -21,6 +21,7 @@ import { EMAIL_REGEX } from "../../helpers";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockIcon from "@mui/icons-material/Lock";
+import { loginApi } from "../../api";
 
 const Login = () => {
   const {
@@ -44,8 +45,17 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
   const handleLogin = (data) => {
-    localStorage.setItem('token', 'admin');
     setLoading(true);
+    loginApi(data, (res) => {
+      setLoading(false);
+      if(res.data) {
+        localStorage.setItem('token', res.data?.result?.token);
+      }
+      else {
+        console.log("loginApi error");
+        setError("Incorrect email or password");
+      }
+    })
   };
   return (
     <Container

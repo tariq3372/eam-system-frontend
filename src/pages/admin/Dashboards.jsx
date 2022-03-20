@@ -1,7 +1,11 @@
 import { Card, CardContent, Container, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 const Dashboards = () => {
+  useEffect(() => {
+
+  }, [])
+  
   return (
     <Container style={{ minHeight: "100%", display: "flex" }}>
       <Stack flex={1} direction="column" spacing={3}>
