@@ -127,7 +127,7 @@ const AddEmployeeModal = ({ onClose }) => {
                                     <TextField
                                         {...rest}
                                         error={errors?.contact_add}
-                                        label="Contact"
+                                        label="Address"
                                     />
                                 )}
                                 rules={{

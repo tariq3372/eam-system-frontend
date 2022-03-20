@@ -13,7 +13,7 @@ const AddDepartmentModal = ({ onClose }) => {
   })
   const [loading, setLoading] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false)
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const handleAddDepartment = (data) => {
     setLoading(true);
   }
