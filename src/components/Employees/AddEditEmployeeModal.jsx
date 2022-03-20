@@ -2,27 +2,51 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, Stack, Typography, TextField, Divider, MenuItem, AlertTitle } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Controller, useForm } from 'react-hook-form';
-import InputWrapper from '../../components/InputWrapper';
+import InputWrapper from '../InputWrapper';
 import { EMAIL_REGEX } from '../../helpers';
 import { Alert } from '@mui/material';
+import { addEmployeeApi, updateEmployeeApi } from '../../api';
 
-const AddEmployeeModal = ({ onClose }) => {
-    const { control, reset, handleSubmit, formState: { errors } } = useForm({
+const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
+    const { control, handleSubmit, formState: { errors } } = useForm({
         reValidateMode: 'onChange',
         defaultValues: {
-            fname: '',
-            lName: '',
-            gender: '',
-            contact_add: '',
-            emp_email: '',
+            fName: item?.fName || '',
+            lName: item?.lName || '',
+            gender: item?.gender || '',
+            age: item?.age || '',
+            contactAdd: item?.contactAdd || '',
+            email: item?.email || '',
+            password: item?.password || ''
         }
     });
+
+    const isEdit = item ? true : false;
     const [loading, setLoading] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
 
     const handleAddEmployee = (data) => {
         setLoading(true);
+        if (isEdit) {
+            updateEmployeeApi(item?._id, data, (res) => {
+                setLoading(false);
+                if (res.data) {
+                    onRefreshData();
+                } else {
+                    setShowErrorAlert(true);
+                };
+            });
+        } else {
+            addEmployeeApi(data, (res) => {
+                setLoading(false);
+                if (res.data) {
+                    onRefreshData();
+                } else {
+                    setShowErrorAlert(true);
+                };
+            });
+        };
     };
 
     return (
@@ -46,18 +70,18 @@ const AddEmployeeModal = ({ onClose }) => {
             }
             <DialogContent>
                 <Stack direction='column' spacing={3}>
-                    <Typography sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}>Add New Employee</Typography>
+                    <Typography sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}>{isEdit ? "Update Employee" : "Add New Employee"}</Typography>
                     <Divider sx={{ mb: 3 }} />
                     <Stack direction='column' spacing={2}>
                         {/* 1 */}
-                        <InputWrapper error={errors?.fname?.message}>
+                        <InputWrapper error={errors?.fName?.message}>
                             <Controller
-                                name="fname"
+                                name="fName"
                                 control={control}
                                 render={({ field: { ref, ...rest } }) => (
                                     <TextField
                                         {...rest}
-                                        error={errors?.fname}
+                                        error={errors?.fName}
                                         label="First Name"
                                     />
                                 )}
@@ -84,7 +108,7 @@ const AddEmployeeModal = ({ onClose }) => {
                         </InputWrapper>
                         <InputWrapper error={errors?.gender?.message}>
                             <Controller
-                                name="age"
+                                name="gender"
                                 control={control}
                                 render={({ field: { ref, ...rest } }) => (
                                     <TextField
@@ -119,14 +143,14 @@ const AddEmployeeModal = ({ onClose }) => {
                                 }}
                             />
                         </InputWrapper>
-                        <InputWrapper error={errors?.contact_add?.message}>
+                        <InputWrapper error={errors?.contactAdd?.message}>
                             <Controller
-                                name="contact_add"
+                                name="contactAdd"
                                 control={control}
                                 render={({ field: { ref, ...rest } }) => (
                                     <TextField
                                         {...rest}
-                                        error={errors?.contact_add}
+                                        error={errors?.contactAdd}
                                         label="Address"
                                     />
                                 )}
@@ -135,14 +159,14 @@ const AddEmployeeModal = ({ onClose }) => {
                                 }}
                             />
                         </InputWrapper>
-                        <InputWrapper error={errors?.emp_email?.message}>
+                        <InputWrapper error={errors?.email?.message}>
                             <Controller
-                                name="emp_email"
+                                name="email"
                                 control={control}
                                 render={({ field: { ref, ...rest } }) => (
                                     <TextField
                                         {...rest}
-                                        error={errors?.emp_email}
+                                        error={errors?.email}
                                         label="Email"
                                     />
                                 )}
@@ -152,6 +176,26 @@ const AddEmployeeModal = ({ onClose }) => {
                                 }}
                             />
                         </InputWrapper>
+                        {!isEdit &&
+                            <InputWrapper error={errors?.password?.message}>
+                                <Controller
+                                    name="password"
+                                    control={control}
+                                    render={({ field: { ref, ...rest } }) => (
+                                        <TextField
+                                            {...rest}
+                                            error={errors?.password}
+                                            label="Password"
+                                        />
+                                    )}
+                                    rules={{
+                                        required: { value: true, message: "Required" },
+                                        minLength: { value: 8, message: "Length should contain 8-20" },
+                                        maxLength: { value: 20, message: "Length should contain 8-20" },
+                                    }}
+                                />
+                            </InputWrapper>
+                        }
                     </Stack>
                     {/* Button */}
                     <LoadingButton loading={loading} style={{ marginTop: '50px' }} variant="contained" onClick={handleSubmit(handleAddEmployee)} >
@@ -163,4 +207,4 @@ const AddEmployeeModal = ({ onClose }) => {
     );
 };
 
-export default AddEmployeeModal;
+export default AddEditEmployeeModal;

@@ -18,7 +18,7 @@ const ViewEmployeeModal = ({ onClose, item }) => {
                         <InputWrapper>
                             <TextField
                                 label="First Name"
-                                value={item?.fname}
+                                value={item?.fName}
                                 disabled
                             />
                         </InputWrapper>
@@ -26,7 +26,7 @@ const ViewEmployeeModal = ({ onClose, item }) => {
                         <InputWrapper>
                             <TextField
                                 label="Last Name"
-                                value={item?.lname}
+                                value={item?.lName}
                                 disabled
                             />
                         </InputWrapper>
