@@ -5,12 +5,13 @@ import { getDashboardCountApi } from "../../api";
 const Dashboards = () => {
   const [employees, setEmployees] = useState(0);
   const [departments, setDepartments] = useState(0);
-  const [jobTitles, setJobTitles] = useState(0)
+  const [jobTitles, setJobTitles] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getDashboardCountApi((res) => {
       if(res.data) {
-        console.log("getDashboardCountApi response", res.data);
+        setLoading(false);
         const { departments, jobTitles, employees } = res.data
         setDepartments(departments);
         setJobTitles(jobTitles);
