@@ -58,3 +58,9 @@ export const deleteEmployeeApi = async (_id, cb) => {
     .then(res => cb(res))
     .catch(err => cb(err));
 }
+
+export const getDashboardCountApi = async (cb) => {
+    axiosApi.get(urls.DASHBOARD)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}

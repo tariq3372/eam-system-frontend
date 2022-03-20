@@ -1,9 +1,25 @@
 import { Card, CardContent, Container, Stack, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { getDashboardCountApi } from "../../api";
 
 const Dashboards = () => {
-  useEffect(() => {
+  const [employees, setEmployees] = useState(0);
+  const [departments, setDepartments] = useState(0);
+  const [jobTitles, setJobTitles] = useState(0)
 
+  useEffect(() => {
+    getDashboardCountApi((res) => {
+      if(res.data) {
+        console.log("getDashboardCountApi response", res.data);
+        const { departments, jobTitles, employees } = res.data
+        setDepartments(departments);
+        setJobTitles(jobTitles);
+        setEmployees(employees);
+      }
+      else {
+        console.log("getDashboardCountApi error")
+      }
+    })
   }, [])
   
   return (
@@ -12,21 +28,21 @@ const Dashboards = () => {
         <Card style={{ backgroundColor: "lightgreen" }}>
           <CardContent>
             Employees
-            <Typography>10</Typography>
+            <Typography>{employees}</Typography>
           </CardContent>
         </Card>
 
         <Card style={{ backgroundColor: "lightblue" }}>
           <CardContent>
             Departments
-            <Typography>10</Typography>
+            <Typography>{departments}</Typography>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent style={{ backgroundColor: "lightsalmon" }}>
             Job Titles
-            <Typography>10</Typography>
+            <Typography>{jobTitles}</Typography>
           </CardContent>
         </Card>
       </Stack>
