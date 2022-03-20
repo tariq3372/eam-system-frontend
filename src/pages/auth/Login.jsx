@@ -9,6 +9,9 @@ import {
   InputAdornment,
   Typography,
   IconButton,
+  FormControlLabel,
+  Checkbox
+  ,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import InputWrapper from "../../components/InputWrapper";
@@ -23,14 +26,20 @@ const Login = () => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     reValidateMode: "onChange",
+    defaultValues: {
+      email: '',
+      password: '',
+      type: "EMPLOYEE"
+    }
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -124,6 +133,21 @@ const Login = () => {
                   }}
                 />
               </InputWrapper>
+
+              <Controller
+                name="type"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <FormControlLabel
+                    control={<Checkbox
+                      checked={value === "ADMIN"}
+                      onChange={(e) => setValue('type', e.target.checked ? "ADMIN" : "EMPLOYEE")}
+                    />}
+                    label="Login as Admin"
+                  />
+                )}
+              />
+
             </Stack>
             {error && (
               <Typography
