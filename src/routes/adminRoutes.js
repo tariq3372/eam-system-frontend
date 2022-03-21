@@ -5,6 +5,7 @@ import Dashboards from '../pages/admin/Dashboards'
 import Departments from '../pages/admin/Departments'
 import Employees from '../pages/admin/Employees'
 import JobTitles from '../pages/admin/JobTitles'
+import Reports from '../pages/admin/Reports'
 import routeNames from './routesName'
 
 const adminRoutes = [
@@ -16,6 +17,7 @@ const adminRoutes = [
       { path: routeNames.admin.departments, element: <Departments/> },
       { path: routeNames.admin.jobTitles, element: <JobTitles/> },
       { path: routeNames.admin.employees, element: <Employees/> },
+      { path: routeNames.admin.reports, element: <Reports/> },
       { path: '*', element: <Navigate to={ routeNames.admin.dashboard }/> },
     ]
   }

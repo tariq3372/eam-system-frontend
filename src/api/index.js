@@ -112,3 +112,9 @@ export const deleteJobTitleApi = async (_id, cb) => {
     .then(res => cb(res))
     .catch(err => cb(err));
 }
+
+export const getDepartmentListApi = async(cb) => {
+    axiosApi.get(urls.DEPARTMENT_LIST)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}

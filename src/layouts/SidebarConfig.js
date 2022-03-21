@@ -6,6 +6,7 @@ const sidebarConfig = [
   { title: "Department", path: routeNames.admin.departments },
   { title: "Job Title", path: routeNames.admin.jobTitles },
   { title: "Employee", path: routeNames.admin.employees },
+  { title: "Report", path: routeNames.admin.reports },
 ];
 
 export default sidebarConfig;

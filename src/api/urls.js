@@ -5,4 +5,5 @@ export const DASHBOARD = `${API_V1}/${ADMIN}/dashboard-count`;
 export const EMPLOYEE = `${API_V1}/${ADMIN}/employee`;
 export const DEPARTMENT = `${API_V1}/${ADMIN}/department`;
 export const JOBTITLE = `${API_V1}/${ADMIN}/job-title`;
+export const DEPARTMENT_LIST = `${API_V1}/${ADMIN}/department-list`;
 

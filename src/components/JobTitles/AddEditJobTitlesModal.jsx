@@ -1,28 +1,30 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert, Dialog, DialogContent, Divider, Stack, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { Alert, Dialog, DialogContent, Divider, MenuItem, Stack, TextField, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { addJobTitleApi, updateJobTitleApi } from '../../api'
+import { addJobTitleApi, getDepartmentListApi, updateJobTitleApi } from '../../api'
 import InputWrapper from '../InputWrapper'
 
 const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
     const { control, handleSubmit, formState: { errors } } = useForm({
         reValidateMode: 'onChange',
         defaultValues: {
-            jobTitle: item?.jobTitle || ''
+            jobTitle: item?.jobTitle || '',
+            departmentName: item?.departmentName || ''
         }
     })
     const isEdit = item ? true : false;
     const [loading, setLoading] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [departmentList, setDepartmentList] = useState();
 
     const handleAddJobTitle = (data) => {
         setLoading(true);
-        if(isEdit) {
+        if (isEdit) {
             updateJobTitleApi(item?._id, data, (res) => {
                 setLoading(false);
-                if(res.data) {
+                if (res.data) {
                     onRefreshData();
                 }
                 else {
@@ -34,7 +36,7 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
             console.log("data", data);
             addJobTitleApi(data, (res) => {
                 setLoading(false);
-                if(res.data) {
+                if (res.data) {
                     onRefreshData();
                 }
                 else {
@@ -43,6 +45,24 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
             })
         }
     }
+
+    useEffect(() => {
+        getDepartmentListApi((res => {
+            if (res.data) {
+                console.log("departmentList", res.data.result);
+                let data = res.data.result?.map((item, index) => ({
+                    id: index,
+                    ...item
+                }))
+                console.log("data", data);
+                setDepartmentList(data[0].departmentName);
+            }
+            else {
+                console.log("getDepartmentListApi error");
+            }
+        }))
+    }, [])
+
 
     return (
         <Dialog
@@ -63,7 +83,7 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
             }
             <DialogContent>
                 <Stack direction='column' spacing={3}>
-                    <Typography style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}> { isEdit ? "Update Job Title" : "Add Job Title" }  </Typography>
+                    <Typography style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}> {isEdit ? "Update Job Title" : "Add Job Title"}  </Typography>
                     <Divider sx={{ mb: 3 }} />
                     <Stack direction='column' spacing={2} >
                         <InputWrapper error={errors?.jobTitle?.message}>
@@ -82,9 +102,29 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
                                 }}
                             />
                         </InputWrapper>
+
+                        <InputWrapper error={errors?.departmentName?.message}>
+                            <Controller
+                                name="departmentName"
+                                control={control}
+                                render={({ field: { ref, ...rest } }) => (
+                                    <TextField
+                                        {...rest}
+                                        select
+                                        label="Department Name"
+                                        placeholder="Select Department"
+                                    >
+                                        <MenuItem key={departmentList} value={departmentList} > {departmentList} </MenuItem>
+                                    </TextField>
+                                )}
+                                rules={{
+                                    required: { value: true, message: 'Required' }
+                                }}
+                            />
+                        </InputWrapper>
                     </Stack>
                     <LoadingButton loading={loading} style={{ marginTop: '50px' }} variant="contained" onClick={handleSubmit(handleAddJobTitle)} >
-                        { isEdit ?  "Update Job Title" : "Add Job Title" }
+                        {isEdit ? "Update Job Title" : "Add Job Title"}
                     </LoadingButton>
                 </Stack>
             </DialogContent>
