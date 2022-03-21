@@ -8,6 +8,8 @@ const Dashboards = () => {
   const [jobTitles, setJobTitles] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // TODO:
+  // Need to add loading
   useEffect(() => {
     getDashboardCountApi((res) => {
       if(res.data) {

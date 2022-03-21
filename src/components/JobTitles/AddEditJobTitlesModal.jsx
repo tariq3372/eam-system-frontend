@@ -17,7 +17,7 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
     const [loading, setLoading] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
-    const [departmentList, setDepartmentList] = useState();
+    const [departmentList, setDepartmentList] = useState([]);
 
     const handleAddJobTitle = (data) => {
         setLoading(true);
@@ -46,16 +46,18 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
         }
     }
 
+    // TODO:
+    // Need to add loading
     useEffect(() => {
         getDepartmentListApi((res => {
             if (res.data) {
-                console.log("departmentList", res.data.result);
+                // console.log("departmentList", res.data.result);
                 let data = res.data.result?.map((item, index) => ({
                     id: index,
                     ...item
                 }))
-                console.log("data", data);
-                setDepartmentList(data[0].departmentName);
+                // console.log("data", data);
+                setDepartmentList(data);
             }
             else {
                 console.log("getDepartmentListApi error");
@@ -102,26 +104,29 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
                                 }}
                             />
                         </InputWrapper>
-
-                        <InputWrapper error={errors?.departmentName?.message}>
-                            <Controller
-                                name="departmentName"
-                                control={control}
-                                render={({ field: { ref, ...rest } }) => (
-                                    <TextField
-                                        {...rest}
-                                        select
-                                        label="Department Name"
-                                        placeholder="Select Department"
-                                    >
-                                        <MenuItem key={departmentList} value={departmentList} > {departmentList} </MenuItem>
-                                    </TextField>
-                                )}
-                                rules={{
-                                    required: { value: true, message: 'Required' }
-                                }}
-                            />
-                        </InputWrapper>
+                        {!isEdit &&
+                            <InputWrapper error={errors?.departmentName?.message}>
+                                <Controller
+                                    name="departmentName"
+                                    control={control}
+                                    render={({ field: { ref, ...rest } }) => (
+                                        <TextField
+                                            {...rest}
+                                            select
+                                            label="Department Name"
+                                            placeholder="Select Department"
+                                        >
+                                            {departmentList.map((item, index) => (
+                                                <MenuItem key={item.departmentName} value={item.departmentName} > {item.departmentName} </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    )}
+                                    rules={{
+                                        required: { value: true, message: 'Required' }
+                                    }}
+                                />
+                            </InputWrapper>
+                        }
                     </Stack>
                     <LoadingButton loading={loading} style={{ marginTop: '50px' }} variant="contained" onClick={handleSubmit(handleAddJobTitle)} >
                         {isEdit ? "Update Job Title" : "Add Job Title"}

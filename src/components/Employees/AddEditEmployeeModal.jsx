@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, Stack, Typography, TextField, Divider, MenuItem, AlertTitle } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Controller, useForm } from 'react-hook-form';
 import InputWrapper from '../InputWrapper';
 import { EMAIL_REGEX } from '../../helpers';
 import { Alert } from '@mui/material';
-import { addEmployeeApi, updateEmployeeApi } from '../../api';
+import { addEmployeeApi, getDepartmentListApi, updateEmployeeApi } from '../../api';
 
 const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
     const { control, handleSubmit, formState: { errors } } = useForm({
@@ -17,7 +17,9 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
             age: item?.age || '',
             contactAdd: item?.contactAdd || '',
             email: item?.email || '',
-            password: item?.password || ''
+            password: item?.password || '',
+            departmentName: item?.departmentName || '',
+            jobTitle: item?.jobTitle || '',
         }
     });
 
@@ -25,6 +27,8 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
     const [loading, setLoading] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [departmentList, setDepartmentList] = useState([]);
+    const [jobTitleList, setJobTitleList] = useState();
 
     const handleAddEmployee = (data) => {
         setLoading(true);
@@ -49,6 +53,23 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
             });
         };
     };
+
+    // TODO:
+    // Add loading
+    useEffect(() => {
+        getDepartmentListApi((res => {
+            if (res.data) {
+                let data = res.data.result.map((item, index) => ({
+                    id: index,
+                    ...item
+                }))
+                setDepartmentList(data);
+            }
+            else {
+                console.log("getDepartmentListApi error")
+            }
+        }))
+    }, [])
 
     return (
         <Dialog
@@ -178,24 +199,68 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
                             />
                         </InputWrapper>
                         {!isEdit &&
-                            <InputWrapper error={errors?.password?.message}>
-                                <Controller
-                                    name="password"
-                                    control={control}
-                                    render={({ field: { ref, ...rest } }) => (
-                                        <TextField
-                                            {...rest}
-                                            error={errors?.password}
-                                            label="Password"
-                                        />
-                                    )}
-                                    rules={{
-                                        required: { value: true, message: "Required" },
-                                        minLength: { value: 8, message: "Length should contain 8-20" },
-                                        maxLength: { value: 20, message: "Length should contain 8-20" },
-                                    }}
-                                />
-                            </InputWrapper>
+                            <>
+                                <InputWrapper error={errors?.password?.message}>
+                                    <Controller
+                                        name="password"
+                                        control={control}
+                                        render={({ field: { ref, ...rest } }) => (
+                                            <TextField
+                                                {...rest}
+                                                error={errors?.password}
+                                                label="Password"
+                                            />
+                                        )}
+                                        rules={{
+                                            required: { value: true, message: "Required" },
+                                            minLength: { value: 8, message: "Length should contain 8-20" },
+                                            maxLength: { value: 20, message: "Length should contain 8-20" },
+                                        }}
+                                    />
+                                </InputWrapper>
+
+                                <InputWrapper error={errors?.departmentName?.message}>
+                                    <Controller
+                                        name="departmentName"
+                                        control={control}
+                                        render={({ field: { ref, ...rest } }) => (
+                                            <TextField
+                                                {...rest}
+                                                select
+                                                label="Department Name"
+                                                placeholder='Select Department Name'
+                                            >
+                                                {departmentList.map((item, index) => (
+                                                    <MenuItem key={item.departmentName} value={item.departmentName}>{item.departmentName}</MenuItem>
+                                                ))}
+                                            </TextField>
+                                        )}
+                                        rules={{
+                                            required: { value: true, message: "Required" },
+                                        }}
+                                    />
+                                </InputWrapper>
+
+                                <InputWrapper error={errors?.jobTitle?.message}>
+                                    <Controller
+                                        name="jobTitle"
+                                        control={control}
+                                        render={({ field: { ref, ...rest } }) => (
+                                            <TextField
+                                                {...rest}
+                                                select
+                                                label="Job Title"
+                                                placeholder='Select Job Title'
+                                            >
+                                                <MenuItem key={"jobTitleList"} value={"jobTitleList"}>{"jobTitleList"}</MenuItem>
+                                            </TextField>
+                                        )}
+                                        rules={{
+                                            required: { value: true, message: "Required" },
+                                        }}
+                                    />
+                                </InputWrapper>
+                            </>
                         }
                     </Stack>
                     {/* Button */}
