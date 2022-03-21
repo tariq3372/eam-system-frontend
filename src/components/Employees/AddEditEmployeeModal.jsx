@@ -37,7 +37,8 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
                     setShowErrorAlert(true);
                 };
             });
-        } else {
+        }
+        else {
             addEmployeeApi(data, (res) => {
                 setLoading(false);
                 if (res.data) {
@@ -62,7 +63,7 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
                     Your request processed successfully.
                 </Alert>
             }
-             {showErrorAlert &&
+            {showErrorAlert &&
                 <Alert severity="error" onClose={() => setShowErrorAlert(false)}>
                     <AlertTitle>Error</AlertTitle>
                     Something went wrong, Please try again later.
@@ -199,7 +200,7 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
                     </Stack>
                     {/* Button */}
                     <LoadingButton loading={loading} style={{ marginTop: '50px' }} variant="contained" onClick={handleSubmit(handleAddEmployee)} >
-                        Add Employee
+                        {isEdit ? "Update Employee" : "Add Employee"}
                     </LoadingButton>
                 </Stack>
             </DialogContent>

@@ -2,21 +2,46 @@ import { LoadingButton } from '@mui/lab'
 import { Alert, Dialog, DialogContent, Divider, Stack, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { addJobTitleApi, updateJobTitleApi } from '../../api'
 import InputWrapper from '../InputWrapper'
 
-const AddJobTitlesModal = ({ onClose }) => {
-    const { control, reset, handleSubmit, formState: { errors } } = useForm({
+const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
+    const { control, handleSubmit, formState: { errors } } = useForm({
         reValidateMode: 'onChange',
         defaultValues: {
-            jobTitleName: ''
+            jobTitle: item?.jobTitle || ''
         }
     })
+    const isEdit = item ? true : false;
     const [loading, setLoading] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
 
     const handleAddJobTitle = (data) => {
-        setLoading(data)
+        setLoading(true);
+        if(isEdit) {
+            updateJobTitleApi(item?._id, data, (res) => {
+                setLoading(false);
+                if(res.data) {
+                    onRefreshData();
+                }
+                else {
+                    showErrorAlert(true);
+                }
+            })
+        }
+        else {
+            console.log("data", data);
+            addJobTitleApi(data, (res) => {
+                setLoading(false);
+                if(res.data) {
+                    onRefreshData();
+                }
+                else {
+                    setShowErrorAlert(true);
+                }
+            })
+        }
     }
 
     return (
@@ -38,18 +63,18 @@ const AddJobTitlesModal = ({ onClose }) => {
             }
             <DialogContent>
                 <Stack direction='column' spacing={3}>
-                    <Typography style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }} Add Department> </Typography>
+                    <Typography style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}> { isEdit ? "Update Job Title" : "Add Job Title" }  </Typography>
                     <Divider sx={{ mb: 3 }} />
                     <Stack direction='column' spacing={2} >
-                        <InputWrapper error={errors?.jobTitleName?.message}>
+                        <InputWrapper error={errors?.jobTitle?.message}>
                             <Controller
-                                name="jobTitleName"
+                                name="jobTitle"
                                 control={control}
                                 render={({ field: { ref, ...rest } }) => (
                                     <TextField
                                         {...rest}
-                                        error={errors?.jobTitleName}
-                                        label="Job Title Name"
+                                        error={errors?.jobTitle}
+                                        label="Job Title"
                                     />
                                 )}
                                 rules={{
@@ -59,7 +84,7 @@ const AddJobTitlesModal = ({ onClose }) => {
                         </InputWrapper>
                     </Stack>
                     <LoadingButton loading={loading} style={{ marginTop: '50px' }} variant="contained" onClick={handleSubmit(handleAddJobTitle)} >
-                        Add JobTitle
+                        { isEdit ?  "Update Job Title" : "Add Job Title" }
                     </LoadingButton>
                 </Stack>
             </DialogContent>
@@ -67,4 +92,4 @@ const AddJobTitlesModal = ({ onClose }) => {
     )
 }
 
-export default AddJobTitlesModal
+export default AddEditJobTitlesModal;

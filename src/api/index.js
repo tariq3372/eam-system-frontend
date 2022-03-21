@@ -64,3 +64,51 @@ export const getDashboardCountApi = async (cb) => {
     .then(res => cb(res))
     .catch(err => cb(err));
 }
+
+export const getDepartmentApi = async (params, cb) => {
+    axiosApi.get(urls.DEPARTMENT, { params })
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const deleteDepartmentApi = async (_id, cb) => {
+    axiosApi.delete(`${urls.DEPARTMENT}/${_id}`)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const addDepartmentApi = async (body, cb) => {
+    axiosApi.post(urls.DEPARTMENT, body)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const updateDepartmentApi = async (_id, body, cb) => {
+    axiosApi.put(`${urls.DEPARTMENT}/${_id}`, body)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const addJobTitleApi = async (body, cb) => {
+    axiosApi.post(urls.JOBTITLE, body)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const updateJobTitleApi = async (_id, body, cb) => {
+    axiosApi.put(`${urls.JOBTITLE}/${_id}`, body)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const getJobTitleApi = async (params, cb) => {
+    axiosApi.get(urls.JOBTITLE, { params })
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const deleteJobTitleApi = async (_id, cb) => {
+    axiosApi.delete(`${urls.JOBTITLE}/${_id}`)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}

@@ -2,41 +2,138 @@ import { Button, Card, CardContent, CardHeader, Divider, Grid, Stack, Typography
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
-import AddDepartmentModal from '../../components/Departments/AddDepartmentModal';
+import Swal from 'sweetalert2';
+import { deleteDepartmentApi, getDepartmentApi } from '../../api';
+import AddEditDepartmentModal from '../../components/Departments/AddEditDepartmentModal';
 import NoDataFound from '../../components/NoDataFound';
-
+import ViewDepartmentModal from '../../components/Departments/ViewDepartmentModal';
+import OverlayLoading from '../../components/OverlayLoading';
 
 const Departments = () => {
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddEditModal, setShowAddEditModal] = useState(false);
   const [currSelectedItem, setCurrSelectedItem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [departments, setDepartments] = useState();
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showOverlayLoading, setShowOverlayLoading] = useState(false);
 
   const columns = [
     { field: '_id', headerName: "ID", flex: 1 },
     { field: 'departmentName', headerName: "Department Name", flex: 1 },
+    {
+      field: 'button', headerName: "Actions", flex: 1, renderCell: (params) => {
+        return (
+          <Stack direction="row" spacing={2} >
+            <Button variant="contained" onClick={() => handleRowAction("VIEW", params?.row)} >View</Button>
+            <Button variant="contained" color="success" onClick={() => handleRowAction("EDIT", params?.row)}>Edit</Button>
+            <Button variant= "contained" color="error" onClick={() => handleRowAction("DELETE", params?.row)}>Delete</Button>
+          </Stack>
+        )
+      }
+    }
   ];
 
   useEffect(() => {
+    fetchData();
   }, []);
   
-  const handleRowClick = (e) => {
-    setCurrSelectedItem(e.row);
+  const fetchData = () => {
+    setLoading(true);
+    getDepartmentApi({ page: 1, limit: 100 }, (res) => {
+      setLoading(false);
+      if(res.data) {
+        let data = res.data.result?.map((item, index) => ({
+          id: index,
+          ...item
+        }));
+        setDepartments(data);
+      };
+    })
   };
 
-  const renderAddDepartmentModal = () => ( showAddModal && 
-    <AddDepartmentModal
-    onClose={() => setShowAddModal(false)}
+  const handleRowAction = (action, item) => {
+    if(action === "VIEW") {
+      setCurrSelectedItem(item);
+      setShowViewModal(true);
+    }
+    else if(action === "EDIT") {
+      setCurrSelectedItem(item);
+      setShowAddEditModal(true);
+    }
+    else if(action === "DELETE") {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setShowOverlayLoading(true);
+          deleteDepartmentApi(item._id, (res) => {
+            setShowOverlayLoading(false);
+            if (res.data) {
+              Swal.fire(
+                'Deleted!',
+                'Department has been deleted.',
+                'success'
+              );
+              fetchData();
+            } else {
+              Swal.fire(
+                'Error',
+                'Something went wrong, Please try again later!',
+                'error'
+              )
+            }
+          })
+        }
+      })
+    }
+  };
+
+  const renderAddEditDepartmentModal = () => ( showAddEditModal && 
+    <AddEditDepartmentModal
+    onClose={() => {
+      setShowAddEditModal(false);
+      setCurrSelectedItem(null);
+    }}
+    item = {currSelectedItem}
+    onRefreshData={()=> {
+      fetchData();
+      setShowAddEditModal(false);
+      setCurrSelectedItem(null);
+      Swal.fire(
+        "Success",
+        "Your request processed successfully",
+        "success"
+      )
+    }}
     />
   );
+
+  const renderViewDepartmentModal = () => ( showViewModal && 
+    <ViewDepartmentModal
+      onClose={() => {
+        setShowViewModal(false);
+        setCurrSelectedItem(null);
+      }}
+      item={currSelectedItem}
+    />
+  )
+
   return (
     <>
-    {renderAddDepartmentModal()}
+    {renderAddEditDepartmentModal()}
+    {renderViewDepartmentModal()}
+    {showOverlayLoading && <OverlayLoading/>}
     <Card>
       <CardContent>
         <Stack direction="row" spacing="auto">
           <Typography> Add New Department </Typography>
-          <Button onClick={() => setShowAddModal(true)} variant="contained" >Add</Button>
+          <Button onClick={() => setShowAddEditModal(true)} variant="contained" >Add</Button>
         </Stack>
       </CardContent>
     </Card>
@@ -52,7 +149,6 @@ const Departments = () => {
             rows={departments || []}
             columns={columns}
             loading={loading}
-            onRowClick={handleRowClick}
             components={{
               NoRowsOverlay: NoDataFound,
             }}

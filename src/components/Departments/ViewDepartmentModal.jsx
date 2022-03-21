@@ -12,7 +12,7 @@ const ViewDepartmentModal = ({ onClose, item }) => {
         >
             <DialogContent>
                 <Stack direction='column' spacing={3}>
-                    <Typography sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}>View Employee</Typography>
+                    <Typography sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}>View Department</Typography>
                     <Divider sx={{ mb: 3 }} />
                     <Stack direction='column' spacing={2}>
                         <InputWrapper>

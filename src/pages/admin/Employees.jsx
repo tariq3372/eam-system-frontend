@@ -21,7 +21,8 @@ const Employees = () => {
     { field: 'fName', headerName: "First Name", width: 150 },
     { field: 'lName', headerName: "Last Name", width: 150 },
     { field: 'gender', headerName: "Gender", width: 100 },
-    { field: 'contactAdd', headerName: "Contact Add", width: 100 },
+    { field: 'age', headerName: "Age", width: 100 },
+    { field: 'contactAdd', headerName: "Contact Add", width: 200 },
     { field: 'email', headerName: "Email", width: 200 },
     {
       field: 'button', headerName: "Actions", width: 250, renderCell: (params) => {

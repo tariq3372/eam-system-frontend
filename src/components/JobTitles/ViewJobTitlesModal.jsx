@@ -12,13 +12,13 @@ const ViewJobTitlesModal = ({ onClose, item }) => {
         >
             <DialogContent>
                 <Stack direction='column' spacing={3}>
-                    <Typography sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}>View Employee</Typography>
+                    <Typography sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}>View Job Title</Typography>
                     <Divider sx={{ mb: 3 }} />
                     <Stack direction='column' spacing={2}>
                         <InputWrapper>
                             <TextField
-                                label="Job Title Name"
-                                value={item?.jobTitleName}
+                                label="Job Title"
+                                value={item?.jobTitle}
                                 disabled
                             />
                         </InputWrapper>
