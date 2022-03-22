@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 
 const AuthLayout = () => {
   return (
-    <div height="100%">
+    <div style ={{ height: "100%" }}>
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>

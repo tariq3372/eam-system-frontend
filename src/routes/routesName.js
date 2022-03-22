@@ -5,6 +5,10 @@ const routesName = {
         jobTitles: '/jobTitles',
         employees: '/employees',
         reports: '/reports'
+    },
+    employee: {
+        dashboard: '/dashboard',
+        reports: '/reports'
     }
 }
 

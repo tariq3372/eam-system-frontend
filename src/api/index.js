@@ -24,23 +24,23 @@ axiosApi.interceptors.response.use(
     (err) => {
         if (err && err.response && err.response.status && err.response.status === 403)
             localStorage.removeItem('token');
-        else if(err && err.response && err.response.status && err.response.status === 400) {
-            Swal.fire(
-                'Error',
-                'Bad Request',
-                'error'
-            )
-        }
-        else if(err && err.response && err.response.status && err.response.status === 405) {
-            Swal.fire(
-                'Error',
-                'This item cannot be deleted',
-                'error'
-            )
-        }
-        else {
+        // else if(err && err.response && err.response.status && err.response.status === 400) {
+        //     Swal.fire(
+        //         'Error',
+        //         'Bad Request',
+        //         'error'
+        //     )
+        // }
+        // else if(err && err.response && err.response.status && err.response.status === 405) {
+        //     Swal.fire(
+        //         'Error',
+        //         'This item cannot be deleted',
+        //         'error'
+        //     )
+        // }
+        // else {
             throw err;
-        }
+        // }
     }
 );
 
@@ -136,6 +136,30 @@ export const getDepartmentListApi = async(cb) => {
 
 export const getJobTitleByDepartmentIdApi = async(_id, cb) => {
     axiosApi.get(`${urls.JOBTITLE}/department-id?departmentId=${_id}`)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const checkIsCheckInApi = async(params, cb) => {
+    axiosApi.get(`/v1/employee/check-in-status`, { params })
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const checkInApi = async(body, cb) => {
+    axiosApi.post(`/v1/employee/check-in`, body)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const checkoutApi = async(_id, cb) => {
+    axiosApi.put(`/v1/employee/check-out/${_id}`)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const leaveApi = async(body, cb) => {
+    axiosApi.post(`/v1/employee/leave`, body)
     .then(res => cb(res))
     .catch(err => cb(err));
 }

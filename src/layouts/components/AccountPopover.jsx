@@ -2,11 +2,13 @@ import { Person } from "@mui/icons-material";
 import { IconButton, Box, Divider, Typography, Button } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MenuPopover from "./MenuPopover";
 
 const AccountPopover = () => {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpen = () => {
     setOpen(true);
@@ -18,6 +20,7 @@ const AccountPopover = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    navigate('/login', { replace: true });
   }
 
   return (

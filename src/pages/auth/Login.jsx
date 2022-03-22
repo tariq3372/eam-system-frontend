@@ -22,6 +22,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockIcon from "@mui/icons-material/Lock";
 import { loginApi } from "../../api";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const {
@@ -40,7 +41,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -50,6 +51,8 @@ const Login = () => {
       setLoading(false);
       if(res.data) {
         localStorage.setItem('token', res.data?.result?.token);
+        localStorage.setItem('_id', res.data?.result?._id);
+        navigate('/dashboard', { replace: true });
       }
       else {
         console.log("loginApi error");

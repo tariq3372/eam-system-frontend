@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Drawer, Typography } from '@mui/material';
@@ -8,6 +8,8 @@ import NavSection from './NavSection';
 import MHidden from './MHidden';
 import sidebarConfig from '../SidebarConfig';
 import palette from '../../theme/palette';
+import jwt_decode from 'jwt-decode'
+import empSidebarConfig from '../EmpSidebarConfig';
 
 const DRAWER_WIDTH = 280;
 
@@ -26,6 +28,9 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
+  const token = localStorage.getItem('token');
+  let decodedToken = token && jwt_decode(token);
+  const currNav = decodedToken?.role === "ADMIN" ? sidebarConfig : empSidebarConfig;
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -49,7 +54,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           EMA System
         </Typography>
       </Box>
-      <NavSection onCloseSidebar={onCloseSidebar} navConfig={sidebarConfig} />
+      <NavSection onCloseSidebar={onCloseSidebar} navConfig={currNav} />
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>
   );

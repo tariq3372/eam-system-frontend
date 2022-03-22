@@ -18,6 +18,7 @@ const adminRoutes = [
       { path: routeNames.admin.jobTitles, element: <JobTitles/> },
       { path: routeNames.admin.employees, element: <Employees/> },
       { path: routeNames.admin.reports, element: <Reports/> },
+      { path: '/', element: <Navigate to={ routeNames.admin.dashboard }/> },
       { path: '*', element: <Navigate to={ routeNames.admin.dashboard }/> },
     ]
   }
