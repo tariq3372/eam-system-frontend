@@ -74,12 +74,12 @@ const JobTitles = () => {
           deleteJobTitleApi(item._id, (res) => {
             setShowOverlayLoading(true);
             if(res.data) {
-              Swal.fire(
-                'Deleted!',
-                'Job Title has been deleted',
-                'success'
-              );
-              fetchData();
+                Swal.fire(
+                  'Deleted!',
+                  'Job Title has been deleted',
+                  'success'
+                );
+                fetchData();
             }
             else {
               Swal.fire(

@@ -10,7 +10,7 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
         reValidateMode: 'onChange',
         defaultValues: {
             jobTitle: item?.jobTitle || '',
-            departmentName: item?.departmentName || ''
+            deptId: item?.departmentName || '',
         }
     })
     const isEdit = item ? true : false;
@@ -18,6 +18,7 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
     const [departmentList, setDepartmentList] = useState([]);
+    const [departmentLoading, setDepartmentLoading] = useState(true);
 
     const handleAddJobTitle = (data) => {
         setLoading(true);
@@ -33,7 +34,6 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
             })
         }
         else {
-            console.log("data", data);
             addJobTitleApi(data, (res) => {
                 setLoading(false);
                 if (res.data) {
@@ -46,18 +46,12 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
         }
     }
 
-    // TODO:
-    // Need to add loading
     useEffect(() => {
         getDepartmentListApi((res => {
+            setDepartmentLoading(false);
             if (res.data) {
-                // console.log("departmentList", res.data.result);
-                let data = res.data.result?.map((item, index) => ({
-                    id: index,
-                    ...item
-                }))
-                // console.log("data", data);
-                setDepartmentList(data);
+                console.log("data", res.data.result);
+                setDepartmentList(res.data.result);
             }
             else {
                 console.log("getDepartmentListApi error");
@@ -105,9 +99,9 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
                             />
                         </InputWrapper>
                         {!isEdit &&
-                            <InputWrapper error={errors?.departmentName?.message}>
+                            <InputWrapper error={errors?.deptId?.message}>
                                 <Controller
-                                    name="departmentName"
+                                    name="deptId"
                                     control={control}
                                     render={({ field: { ref, ...rest } }) => (
                                         <TextField
@@ -115,9 +109,10 @@ const AddEditJobTitlesModal = ({ onClose, onRefreshData, item }) => {
                                             select
                                             label="Department Name"
                                             placeholder="Select Department"
+                                            disabled={!departmentList?.length || departmentLoading}
                                         >
-                                            {departmentList.map((item, index) => (
-                                                <MenuItem key={item.departmentName} value={item.departmentName} > {item.departmentName} </MenuItem>
+                                            {departmentList?.map((item, index) => (
+                                                <MenuItem key={index} value={item._id}>{item.departmentName}</MenuItem>
                                             ))}
                                         </TextField>
                                     )}

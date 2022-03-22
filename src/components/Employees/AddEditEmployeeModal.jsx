@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, Stack, Typography, TextField, Divider, MenuItem, AlertTitle } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, set, useForm } from 'react-hook-form';
 import InputWrapper from '../InputWrapper';
 import { EMAIL_REGEX } from '../../helpers';
 import { Alert } from '@mui/material';
-import { addEmployeeApi, getDepartmentListApi, updateEmployeeApi } from '../../api';
+import { addEmployeeApi, getDepartmentListApi, getJobTitleByDepartmentIdApi, updateEmployeeApi } from '../../api';
 
 const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, setValue, handleSubmit, formState: { errors } } = useForm({
         reValidateMode: 'onChange',
         defaultValues: {
             fName: item?.fName || '',
@@ -19,7 +19,7 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
             email: item?.email || '',
             password: item?.password || '',
             departmentName: item?.departmentName || '',
-            jobTitle: item?.jobTitle || '',
+            jobTitleId: item?.jobTitle || '',
         }
     });
 
@@ -28,7 +28,9 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
     const [departmentList, setDepartmentList] = useState([]);
-    const [jobTitleList, setJobTitleList] = useState();
+    const [departmentLoading, setDepartmentLoading] = useState(true);
+    const [jobLoading, setJobLoading] = useState(true);
+    const [jobTitleList, setJobTitleList] = useState([]);
 
     const handleAddEmployee = (data) => {
         setLoading(true);
@@ -43,6 +45,7 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
             });
         }
         else {
+            console.log("handleAddEmployee data", data)
             addEmployeeApi(data, (res) => {
                 setLoading(false);
                 if (res.data) {
@@ -54,22 +57,30 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
         };
     };
 
-    // TODO:
-    // Add loading
     useEffect(() => {
         getDepartmentListApi((res => {
+            setDepartmentLoading(false);
             if (res.data) {
-                let data = res.data.result.map((item, index) => ({
-                    id: index,
-                    ...item
-                }))
-                setDepartmentList(data);
+                setDepartmentList(res.data.result);
             }
             else {
                 console.log("getDepartmentListApi error")
             }
         }))
     }, [])
+
+    const fetchJobTitles = (_id) => {
+        getJobTitleByDepartmentIdApi(_id, (res) => {
+            setJobLoading(false);
+            if (res.data) {
+                setJobLoading(false);
+                setJobTitleList(res.data.result);
+            }
+            else {
+                console.log("getJobTitleByDepartmentIdApi error");
+            }
+        })
+    }
 
     return (
         <Dialog
@@ -223,15 +234,21 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
                                     <Controller
                                         name="departmentName"
                                         control={control}
-                                        render={({ field: { ref, ...rest } }) => (
+                                        render={({ field: { ref, onChange, ...rest } }) => (
                                             <TextField
                                                 {...rest}
+                                                onChange={(e) => {
+                                                    setValue('departmentName', e.target.value);
+                                                    // setValue('jobTitle', '');
+                                                    fetchJobTitles(e.target.value);
+                                                }}
                                                 select
                                                 label="Department Name"
                                                 placeholder='Select Department Name'
+                                                disabled={!departmentList?.length || departmentLoading}
                                             >
-                                                {departmentList.map((item, index) => (
-                                                    <MenuItem key={item.departmentName} value={item.departmentName}>{item.departmentName}</MenuItem>
+                                                {departmentList?.map((item, index) => (
+                                                    <MenuItem key={index} value={item._id}>{item.departmentName}</MenuItem>
                                                 ))}
                                             </TextField>
                                         )}
@@ -241,9 +258,9 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
                                     />
                                 </InputWrapper>
 
-                                <InputWrapper error={errors?.jobTitle?.message}>
+                                <InputWrapper error={errors?.jobTitleId?.message}>
                                     <Controller
-                                        name="jobTitle"
+                                        name="jobTitleId"
                                         control={control}
                                         render={({ field: { ref, ...rest } }) => (
                                             <TextField
@@ -251,8 +268,11 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
                                                 select
                                                 label="Job Title"
                                                 placeholder='Select Job Title'
+                                                disabled={!jobTitleList?.length || jobLoading}
                                             >
-                                                <MenuItem key={"jobTitleList"} value={"jobTitleList"}>{"jobTitleList"}</MenuItem>
+                                                {jobTitleList?.map((item, index) => (
+                                                    <MenuItem key={index} value={item._id}>{item.jobTitle}</MenuItem>
+                                                ))}
                                             </TextField>
                                         )}
                                         rules={{

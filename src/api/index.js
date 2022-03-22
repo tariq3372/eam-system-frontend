@@ -23,7 +23,7 @@ axiosApi.interceptors.response.use(
     (err) => {
         if (err && err.response && err.response.statusCode && err.response.statusCode === 403)
             localStorage.removeItem('token');
-        if(err && err.response && err.response.statusCode && err.response.statusCode === 401)
+        if(err && err.response && err.response.statusCode && err.response.statusCode === 400)
 
         throw err;
     }
@@ -115,6 +115,12 @@ export const deleteJobTitleApi = async (_id, cb) => {
 
 export const getDepartmentListApi = async(cb) => {
     axiosApi.get(urls.DEPARTMENT_LIST)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const getJobTitleByDepartmentIdApi = async(_id, cb) => {
+    axiosApi.get(`${urls.JOBTITLE}/department-id?departmentId=${_id}`)
     .then(res => cb(res))
     .catch(err => cb(err));
 }

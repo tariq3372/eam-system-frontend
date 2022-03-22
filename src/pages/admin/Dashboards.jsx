@@ -1,4 +1,4 @@
-import { Card, CardContent, Container, Stack, Typography } from "@mui/material";
+import { Card, CardContent, CircularProgress, Container, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getDashboardCountApi } from "../../api";
 
@@ -8,8 +8,6 @@ const Dashboards = () => {
   const [jobTitles, setJobTitles] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // TODO:
-  // Need to add loading
   useEffect(() => {
     getDashboardCountApi((res) => {
       if(res.data) {
@@ -24,6 +22,10 @@ const Dashboards = () => {
       }
     })
   }, [])
+
+  const renderCount = (count) => (
+    loading? <CircularProgress size={20} sx ={{ mt: 2 }} /> : count
+  )
   
   return (
     <Container style={{ minHeight: "100%", display: "flex" }}>
@@ -31,21 +33,21 @@ const Dashboards = () => {
         <Card style={{ backgroundColor: "lightgreen" }}>
           <CardContent>
             Employees
-            <Typography>{employees}</Typography>
+            <Typography>{renderCount(employees)}</Typography>
           </CardContent>
         </Card>
 
         <Card style={{ backgroundColor: "lightblue" }}>
           <CardContent>
             Departments
-            <Typography>{departments}</Typography>
+            <Typography>{renderCount(departments)}</Typography>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent style={{ backgroundColor: "lightsalmon" }}>
             Job Titles
-            <Typography>{jobTitles}</Typography>
+            <Typography>{renderCount(jobTitles)}</Typography>
           </CardContent>
         </Card>
       </Stack>
