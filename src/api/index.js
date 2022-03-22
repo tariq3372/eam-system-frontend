@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import * as urls from './urls';
 const axiosApi = axios.create({});
 const SERVER_URL = 'http://localhost:4000/api';
@@ -21,11 +22,25 @@ axiosApi.interceptors.response.use(
         return res;
     },
     (err) => {
-        if (err && err.response && err.response.statusCode && err.response.statusCode === 403)
+        if (err && err.response && err.response.status && err.response.status === 403)
             localStorage.removeItem('token');
-        if(err && err.response && err.response.statusCode && err.response.statusCode === 400)
-
-        throw err;
+        else if(err && err.response && err.response.status && err.response.status === 400) {
+            Swal.fire(
+                'Error',
+                'Bad Request',
+                'error'
+            )
+        }
+        else if(err && err.response && err.response.status && err.response.status === 405) {
+            Swal.fire(
+                'Error',
+                'This item cannot be deleted',
+                'error'
+            )
+        }
+        else {
+            throw err;
+        }
     }
 );
 

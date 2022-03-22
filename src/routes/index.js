@@ -4,8 +4,17 @@ import authRoutes from "./authRoutes";
 import adminRoutes from "./adminRoutes";
 
 const Router = () => {
+  const [currRoutes, setCurrRoutes] = React.useState(authRoutes);
   const token = localStorage.getItem('token');
-  return useRoutes(token? adminRoutes: authRoutes);
+  React.useEffect(() => {
+    if(token) {
+      setCurrRoutes(adminRoutes);
+    }
+    else {
+      setCurrRoutes(authRoutes);
+    }
+  }, [token]);
+  return useRoutes(currRoutes);
 }
 
 export default Router;

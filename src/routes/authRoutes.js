@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Navigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/auth/Login";
 import Page404 from "../pages/auth/Page404";
@@ -9,12 +10,13 @@ const authRoutes = [
         element: <AuthLayout />,
         children: [
             {
-                path: "/", element: <Login />
+                path: "/login", element: <Login />
             },
-            {
-                path: "*", element: <Page404 />
-            }
-        ]
+            { 
+                path: '*', element: <Navigate to='/login'/> 
+            },
+        ],
+
     },
 ]
 
