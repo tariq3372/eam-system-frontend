@@ -19,7 +19,7 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
             email: item?.email || '',
             password: item?.password || '',
             departmentName: item?.departmentName || '',
-            jobTitleId: item?.jobTitle || '',
+            jobTitleId: item?.jobTitleId || '',
         }
     });
 
@@ -35,6 +35,7 @@ const AddEditEmployeeModal = ({ onClose, onRefreshData, item }) => {
     const handleAddEmployee = (data) => {
         setLoading(true);
         if (isEdit) {
+            console.log("data", data);
             updateEmployeeApi(item?._id, data, (res) => {
                 setLoading(false);
                 if (res.data) {
