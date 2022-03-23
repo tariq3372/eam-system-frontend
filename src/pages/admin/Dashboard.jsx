@@ -2,7 +2,7 @@ import { Card, CardContent, CircularProgress, Container, Stack, Typography } fro
 import React, { useEffect, useState } from "react";
 import { getDashboardCountApi } from "../../api";
 
-const Dashboards = () => {
+const Dashboard = () => {
   const [employees, setEmployees] = useState(0);
   const [departments, setDepartments] = useState(0);
   const [jobTitles, setJobTitles] = useState(0);
@@ -10,7 +10,7 @@ const Dashboards = () => {
 
   useEffect(() => {
     getDashboardCountApi((res) => {
-      if(res.data) {
+      if (res.data) {
         setLoading(false);
         const { departments, jobTitles, employees } = res.data
         setDepartments(departments);
@@ -24,35 +24,37 @@ const Dashboards = () => {
   }, [])
 
   const renderCount = (count) => (
-    loading? <CircularProgress size={20} sx ={{ mt: 2 }} /> : count
+    loading ? <CircularProgress size={20} sx={{ mt: 2 }} /> : count
   )
-  
+
   return (
     <Container style={{ minHeight: "100%", display: "flex" }}>
       <Stack flex={1} direction="column" spacing={3}>
-        <Card style={{ backgroundColor: "lightgreen" }}>
-          <CardContent>
-            Employees
-            <Typography>{renderCount(employees)}</Typography>
-          </CardContent>
-        </Card>
 
-        <Card style={{ backgroundColor: "lightblue" }}>
+        <Card style={{ backgroundColor: "lightgreen" }}>
           <CardContent>
             Departments
             <Typography>{renderCount(departments)}</Typography>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent style={{ backgroundColor: "lightsalmon" }}>
+        <Card style={{ backgroundColor: "lightblue" }}>
+          <CardContent>
             Job Titles
             <Typography>{renderCount(jobTitles)}</Typography>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardContent style={{ backgroundColor: "lightsalmon" }}>
+            Employees
+            <Typography>{renderCount(employees)}</Typography>
+          </CardContent>
+        </Card>
+
       </Stack>
     </Container>
   );
 };
 
-export default Dashboards;
+export default Dashboard;

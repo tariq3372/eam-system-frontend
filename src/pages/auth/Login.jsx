@@ -55,7 +55,6 @@ const Login = () => {
         navigate('/dashboard', { replace: true });
       }
       else {
-        console.log("loginApi error");
         setError("Incorrect email or password");
       }
     })

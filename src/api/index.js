@@ -140,26 +140,33 @@ export const getJobTitleByDepartmentIdApi = async(_id, cb) => {
     .catch(err => cb(err));
 }
 
+export const getAttendanceReportApi = async(cb) => {
+    axiosApi.get(`${urls.ATTENDANCE_REPORT}`)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
 export const checkIsCheckInApi = async(params, cb) => {
-    axiosApi.get(`/v1/employee/check-in-status`, { params })
+    axiosApi.get(`${urls.EMPLOYEE_ROUTES}/check-in-status`, { params })
     .then(res => cb(res))
     .catch(err => cb(err));
 }
 
 export const checkInApi = async(body, cb) => {
-    axiosApi.post(`/v1/employee/check-in`, body)
+    axiosApi.post(`${urls.EMPLOYEE_ROUTES}/check-in`, body)
     .then(res => cb(res))
     .catch(err => cb(err));
 }
 
 export const checkoutApi = async(_id, cb) => {
-    axiosApi.put(`/v1/employee/check-out/${_id}`)
+    axiosApi.put(`${urls.EMPLOYEE_ROUTES}/check-out/${_id}`)
     .then(res => cb(res))
     .catch(err => cb(err));
 }
 
 export const leaveApi = async(body, cb) => {
-    axiosApi.post(`/v1/employee/leave`, body)
+    axiosApi.post(`${urls.EMPLOYEE_ROUTES}/leave`, body)
     .then(res => cb(res))
     .catch(err => cb(err));
 }
+

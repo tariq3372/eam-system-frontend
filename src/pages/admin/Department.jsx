@@ -8,8 +8,9 @@ import AddEditDepartmentModal from '../../components/Departments/AddEditDepartme
 import NoDataFound from '../../components/NoDataFound';
 import ViewDepartmentModal from '../../components/Departments/ViewDepartmentModal';
 import OverlayLoading from '../../components/OverlayLoading';
+import { checkStatus } from '../../helpers';
 
-const Departments = () => {
+const Department = () => {
   const [showAddEditModal, setShowAddEditModal] = useState(false);
   const [currSelectedItem, setCurrSelectedItem] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -56,7 +57,7 @@ const Departments = () => {
       setCurrSelectedItem(item);
       setShowViewModal(true);
     }
-    else if(action === "EDIT") {
+    if(action === "EDIT") {
       setCurrSelectedItem(item);
       setShowAddEditModal(true);
     }
@@ -82,11 +83,7 @@ const Departments = () => {
               );
               fetchData();
             } else {
-              Swal.fire(
-                'Error',
-                'Something went wrong, Please try again later!',
-                'error'
-              )
+              checkStatus(res)
             }
           })
         }
@@ -161,4 +158,4 @@ const Departments = () => {
   )
 }
 
-export default Departments
+export default Department

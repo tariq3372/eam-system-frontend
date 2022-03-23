@@ -3,25 +3,27 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { checkInApi, checkIsCheckInApi, checkoutApi, leaveApi } from "../../api";
 
-const Dashboards = () => {
+const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckIn, setIsCheckIn] = useState(false);
-  const _id = localStorage.getItem('_id');
+  const id = localStorage.getItem('_id');
 
   useEffect(() => {
     setLoading(true)
     handleCheckInStatue();
-  }, [_id])
+  }, [id])
 
   const handleCheckInStatue = () => {
-    checkIsCheckInApi({ _id }, (res) => {
+    checkIsCheckInApi({ id }, (res) => {
       setLoading(false);
       if (res.data) {
         if (res.data.isDurationExist) {
-          setIsCheckIn(true);
-        } else {
+          console.log(res.data);
           setIsCheckIn(false);
+        } else {
+          console.log(res.data);
+          setIsCheckIn(true);
         }
       };
     })
@@ -29,7 +31,7 @@ const Dashboards = () => {
 
   const handleCheckIn = () => {
     setIsLoading(true);
-    checkInApi({ _id }, (res) => {
+    checkInApi({ id }, (res) => {
       setIsLoading(false);
       if (res.data) {
         Swal.fire(
@@ -50,7 +52,7 @@ const Dashboards = () => {
 
   const handleCheckOut = () => {
     setIsLoading(true);
-    checkoutApi(_id, (res) => {
+    checkoutApi(id, (res) => {
       setIsLoading(false);
       if (res.data) {
         Swal.fire(
@@ -71,7 +73,7 @@ const Dashboards = () => {
 
   const handleLeave = () => {
     setIsLoading(true);
-    leaveApi({ _id }, (res) => {
+    leaveApi({ id }, (res) => {
       setIsLoading(false);
       if (res.data) {
         Swal.fire(
@@ -100,18 +102,11 @@ const Dashboards = () => {
     <Container style={{ minHeight: "100%", display: "flex" }}>
       <Stack flex={1} direction="column" spacing={5}>
         {!isCheckIn ?
-          <Card style={{ backgroundColor: "lightgreen" }}>
-            <CardContent sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography>{"Want to check in"}</Typography>
-              <Button variant="contained" size="large" onClick={() => handleCheckIn()} >Check In</Button>
-            </CardContent>
-          </Card>
-          :
           <>
-            <Card style={{ backgroundColor: "lightblue" }}>
+            <Card style={{ backgroundColor: "lightgreen" }}>
               <CardContent sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography>{"Want to check out"}</Typography>
-                <Button variant="contained" size="large" onClick={() => handleCheckOut()} >Checkout</Button>
+                <Typography>{"Want to check in"}</Typography>
+                <Button variant="contained" size="large" onClick={() => handleCheckIn()} >Check In</Button>
               </CardContent>
             </Card>
             <Card style={{ backgroundColor: "lightsalmon" }}>
@@ -121,10 +116,17 @@ const Dashboards = () => {
               </CardContent>
             </Card>
           </>
+          :
+          <Card style={{ backgroundColor: "lightblue" }}>
+            <CardContent sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography>{"Want to check out"}</Typography>
+              <Button variant="contained" size="large" onClick={() => handleCheckOut()} >Checkout</Button>
+            </CardContent>
+          </Card>
         }
       </Stack>
     </Container>
   );
 };
 
-export default Dashboards;
+export default Dashboard;

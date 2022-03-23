@@ -1,26 +1,32 @@
-import { Button, Card, CardContent, CardHeader, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, Divider, Grid, Box, Stack, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react'
-import Swal from 'sweetalert2';
-import AddEditJobTitlesModal from '../../components/JobTitles/AddEditJobTitlesModal';
+import { useEffect, useState } from 'react';
 import NoDataFound from '../../components/NoDataFound';
-import ViewJobTitleModal from '../../components/JobTitles/ViewJobTitlesModal';
-import { deleteJobTitleApi, getJobTitleApi } from '../../api';
+import AddEditEmployeeModal from '../../components/Employees/AddEditEmployeeModal';
+import { deleteEmployeeApi, getEmployeeApi } from '../../api';
+import ViewEmployeeModal from '../../components/Employees/ViewEmployeeModal';
+import Swal from 'sweetalert2';
 import OverlayLoading from '../../components/OverlayLoading';
+import { checkStatus } from '../../helpers';
 
-const JobTitles = () => {
-  const [showAddEditModal, setShowAddEditModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [jobTitles, setJobTitles] = useState();
+const Employee = () => {
   const [currSelectedItem, setCurrSelectedItem] = useState(null);
+  const [employees, setEmployees] = useState();
+  const [loading, setLoading] = useState(false);
+  const [showAddEditModal, setShowAddEditModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showOverlayLoading, setShowOverlayLoading] = useState(false);
-  
+
   const columns = [
-    { field: '_id', headerName: 'ID', flex: 1 },
-    { field: 'jobTitle', headerName: 'Job Title', flex: 1 },
+    { field: '_id', headerName: "ID", width: 250 },
+    { field: 'fName', headerName: "First Name", width: 150 },
+    { field: 'lName', headerName: "Last Name", width: 150 },
+    { field: 'gender', headerName: "Gender", width: 100 },
+    { field: 'age', headerName: "Age", width: 100 },
+    { field: 'contactAdd', headerName: "Contact Add", width: 200 },
+    { field: 'email', headerName: "Email", width: 200 },
     {
-      field: 'button', headerName: "Actions", flex: 1, renderCell: (params) => {
+      field: 'button', headerName: "Actions", width: 250, renderCell: (params) => {
         return (
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={() => handleRowAction("VIEW", params?.row)}>View</Button>
@@ -29,94 +35,86 @@ const JobTitles = () => {
           </Stack>
         )
       }
-    }
-  ]
+    },
+  ];
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = () => {
-    setLoading(true);
-    getJobTitleApi({ page: 1, limit: 100 }, (res) => {
+      setLoading(true);
+      getEmployeeApi({ page: 1, limit: 100 }, (res) => {
       setLoading(false);
-      if(res.data) {
+      if (res.data) {
         let data = res.data.result?.map((item, index) => ({
           id: index,
-          ...item
-        }))
-        setJobTitles(data);
-      }
+          ...item,
+        }));
+        setEmployees(data);
+      };
     })
-  }
+  };
 
   const handleRowAction = (action, item) => {
-    if(action === "VIEW") {
+    if (action === "VIEW") {
       setCurrSelectedItem(item);
       setShowViewModal(true);
-    }
-    else if(action === "EDIT") {
+    } else if (action === "EDIT") {
       setCurrSelectedItem(item);
       setShowAddEditModal(true);
-    }
-    else if(action === "DELETE") {
+    } else if (action === "DELETE") {
       Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: '#3085d6',
+        confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
           setShowOverlayLoading(true);
-          deleteJobTitleApi(item._id, (res) => {
-            setShowOverlayLoading(true);
-            if(res.data) {
-                Swal.fire(
-                  'Deleted!',
-                  'Job Title has been deleted',
-                  'success'
-                );
-                fetchData();
-            }
-            else {
+          deleteEmployeeApi(item._id, (res) => {
+            setShowOverlayLoading(false);
+            if (res.data) {
               Swal.fire(
-                'Error',
-                'Something went wrong, Please try again later!',
-                'error'
-              )
+                'Deleted!',
+                'Employee has been deleted.',
+                'success'
+              );
+              fetchData();
+            } else {
+              checkStatus(res);
             }
           })
         }
       })
-    }
-  }
+    };
+  };
 
-  const renderAddEditJobTitleModal = () => (showAddEditModal &&
-    <AddEditJobTitlesModal
+  const renderAddEditEmployeeModal = () => (showAddEditModal &&
+    <AddEditEmployeeModal
       onClose={() => {
         setShowAddEditModal(false);
         setCurrSelectedItem(null);
       }}
-      item = {currSelectedItem}
-      onRefreshData={()=> {
+      item={currSelectedItem}
+      onRefreshData={() => {
         fetchData();
         setShowAddEditModal(false);
         setCurrSelectedItem(null);
-        Swal.fireI(
-          "success",
-          "Your request processed successfully",
+        Swal.fire(
+          "Success",
+          "Your request processed successfully.",
           "success"
-        )
+        );
       }}
     />
   )
-
-  const renderViewJobTitleModal = () => ( showViewModal &&
-    <ViewJobTitleModal
-      onClose={()=> {
+  const renderViewEmployeeModal = () => (showViewModal &&
+    <ViewEmployeeModal
+      onClose={() => {
         setShowViewModal(false);
         setCurrSelectedItem(null);
       }}
@@ -126,14 +124,14 @@ const JobTitles = () => {
 
   return (
     <>
-      {renderAddEditJobTitleModal()}
-      {renderViewJobTitleModal()}
-      {showOverlayLoading && <OverlayLoading/>}
+      {renderAddEditEmployeeModal()}
+      {renderViewEmployeeModal()}
+      {showOverlayLoading && <OverlayLoading />}
       <Card>
         <CardContent>
           <Stack direction="row" spacing="auto">
-            <Typography> Add New Job Title </Typography>
-            <Button onClick={() => setShowAddEditModal(true)} variant="contained" >Add</Button>
+            <Typography>Add New Employee</Typography>
+            <Button onClick={() => setShowAddEditModal(true)} variant="contained">Add</Button>
           </Stack>
         </CardContent>
       </Card>
@@ -141,12 +139,12 @@ const JobTitles = () => {
       {/* Data Table */}
       <Card sx={{ mt: 2, display: 'flex', flexDirection: 'column', minHeight: 'auto' }}>
         <Grid sx={{ px: 3, pt: 3, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <CardHeader sx={{ p: 0 }} title="Job Title" />
+          <CardHeader sx={{ p: 0 }} title="Employees" />
         </Grid>
         <Divider sx={{ mt: 2 }} />
         <CardContent sx={{ display: 'flex', minHeight: 'auto', overflow: 'auto' }}>
           <DataGrid
-            rows={jobTitles || []}
+            rows={employees || []}
             columns={columns}
             loading={loading}
             components={{
@@ -157,7 +155,7 @@ const JobTitles = () => {
         </CardContent>
       </Card>
     </>
-  )
-}
+  );
+};
 
-export default JobTitles;
+export default Employee;
