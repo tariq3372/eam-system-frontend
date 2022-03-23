@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Navigate } from 'react-router-dom'
 import AdminLayout from '../layouts/AdminLayout'
 import Dashboard from '../pages/employee/Dashboard'
-// import Reports from '../pages/employee/Reports'
+import Report from '../pages/employee/Report'
 import routeNames from './routesName'
 
 const employeeRoutes = [
@@ -10,10 +10,10 @@ const employeeRoutes = [
     path: '/',
     element: <AdminLayout/>,
     children: [
-      { path: routeNames.admin.dashboard, element: <Dashboard/> },
-      // { path: routeNames.admin.reports, element: <Reports/> },
-      { path: '/', element: <Navigate to={ routeNames.admin.dashboard }/> },
-      { path: '*', element: <Navigate to={ routeNames.admin.dashboard }/> },
+      { path: routeNames.employee.dashboards, element: <Dashboard/> },
+      { path: routeNames.employee.reports, element: <Report/> },
+      { path: '/', element: <Navigate to={ routeNames.employee.dashboards }/> },
+      { path: '*', element: <Navigate to={ routeNames.employee.dashboards }/> },
     ]
   }
 ]

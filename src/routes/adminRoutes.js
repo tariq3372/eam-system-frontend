@@ -13,13 +13,13 @@ const adminRoutes = [
     path: '/',
     element: <AdminLayout/>,
     children: [
-      { path: routeNames.admin.dashboard, element: <Dashboard/> },
+      { path: routeNames.admin.dashboards, element: <Dashboard/> },
       { path: routeNames.admin.departments, element: <Department/> },
       { path: routeNames.admin.jobTitles, element: <JobTitle/> },
       { path: routeNames.admin.employees, element: <Employee/> },
       { path: routeNames.admin.reports, element: <Report/> },
-      { path: '/', element: <Navigate to={ routeNames.admin.dashboard }/> },
-      { path: '*', element: <Navigate to={ routeNames.admin.dashboard }/> },
+      { path: '/', element: <Navigate to={ routeNames.admin.dashboards }/> },
+      { path: '*', element: <Navigate to={ routeNames.admin.dashboards }/> },
     ]
   }
 ]

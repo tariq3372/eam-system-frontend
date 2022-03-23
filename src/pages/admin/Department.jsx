@@ -40,7 +40,7 @@ const Department = () => {
   
   const fetchData = () => {
     setLoading(true);
-    getDepartmentApi({ page: 1, limit: 100 }, (res) => {
+    getDepartmentApi((res) => {
       setLoading(false);
       if(res.data) {
         let data = res.data.result?.map((item, index) => ({

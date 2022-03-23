@@ -44,7 +44,7 @@ const Employee = () => {
 
   const fetchData = () => {
       setLoading(true);
-      getEmployeeApi({ page: 1, limit: 100 }, (res) => {
+      getEmployeeApi((res) => {
       setLoading(false);
       if (res.data) {
         let data = res.data.result?.map((item, index) => ({

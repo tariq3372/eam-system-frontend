@@ -24,23 +24,7 @@ axiosApi.interceptors.response.use(
     (err) => {
         if (err && err.response && err.response.status && err.response.status === 403)
             localStorage.removeItem('token');
-        // else if(err && err.response && err.response.status && err.response.status === 400) {
-        //     Swal.fire(
-        //         'Error',
-        //         'Bad Request',
-        //         'error'
-        //     )
-        // }
-        // else if(err && err.response && err.response.status && err.response.status === 405) {
-        //     Swal.fire(
-        //         'Error',
-        //         'This item cannot be deleted',
-        //         'error'
-        //     )
-        // }
-        // else {
             throw err;
-        // }
     }
 );
 
@@ -56,8 +40,8 @@ export const addEmployeeApi = async (body, cb) => {
     .catch(err => cb(err));
 }
 
-export const getEmployeeApi = async (params, cb) => {
-    axiosApi.get(urls.EMPLOYEE, {params})
+export const getEmployeeApi = async (cb) => {
+    axiosApi.get(urls.EMPLOYEE)
     .then(res => cb(res))
     .catch(err => cb(err));
 }
@@ -80,8 +64,8 @@ export const getDashboardCountApi = async (cb) => {
     .catch(err => cb(err));
 }
 
-export const getDepartmentApi = async (params, cb) => {
-    axiosApi.get(urls.DEPARTMENT, { params })
+export const getDepartmentApi = async (cb) => {
+    axiosApi.get(urls.DEPARTMENT)
     .then(res => cb(res))
     .catch(err => cb(err));
 }
@@ -116,8 +100,8 @@ export const updateJobTitleApi = async (_id, body, cb) => {
     .catch(err => cb(err));
 }
 
-export const getJobTitleApi = async (params, cb) => {
-    axiosApi.get(urls.JOBTITLE, { params })
+export const getJobTitleApi = async (cb) => {
+    axiosApi.get(urls.JOBTITLE)
     .then(res => cb(res))
     .catch(err => cb(err));
 }
@@ -170,3 +154,8 @@ export const leaveApi = async(body, cb) => {
     .catch(err => cb(err));
 }
 
+export const getEmployeeAttendanceReportsApi = async(params, cb) => {
+    axiosApi.get(`${urls.EMPLOYEE_ROUTES}//attendance-report`, { params })
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}

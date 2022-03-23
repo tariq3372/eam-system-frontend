@@ -71,12 +71,10 @@ const Login = () => {
       <Card style={{ padding: 4, minWidth: 300 }}>
         <CardContent>
           <Stack direction="column" spacing={8}>
-            <Avatar
-              style={{ backgroundColor: "lightgreen", alignSelf: "center" }}
-              variant="rounded"
-            >
-              <EmailIcon />
-            </Avatar>
+            <Typography sx={{ alignSelf: "center", fontWeight: "bold", fontSize: 35 }} >
+              Login
+            </Typography>
+
             <Stack direction="column" spacing={5}>
               <InputWrapper error={errors?.email?.message}>
                 <Controller

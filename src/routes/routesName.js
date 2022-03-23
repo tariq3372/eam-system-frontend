@@ -1,14 +1,14 @@
 const routesName = {
     admin: {
-        dashboard: '/dashboard',
-        departments: '/departments',
+        dashboards: '/dashboard',
+        departments: '/department',
         jobTitles: '/jobTitle',
         employees: '/employee',
         reports: '/report'
     },
     employee: {
-        dashboard: '/dashboard',
-        reports: '/reports'
+        dashboards: '/dashboard',
+        reports: '/report'
     }
 }
 

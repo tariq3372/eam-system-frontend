@@ -37,6 +37,7 @@ const Report = () => {
 
   return (
     <>
+      {/* Data Table */}
       <Card style={{ marginTop: 2, display: 'flex', flexDirection: 'column', minHeight: 'auto'}}>
         <Grid sx={{ px: 3, pt: 3, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
           <CardHeader sx={{ padding: 0 }} title="Reports"/>

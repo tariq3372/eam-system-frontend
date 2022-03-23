@@ -39,7 +39,7 @@ const JobTitle = () => {
 
   const fetchData = () => {
     setLoading(true);
-    getJobTitleApi({ page: 1, limit: 100 }, (res) => {
+    getJobTitleApi((res) => {
       setLoading(false);
       if(res.data) {
         let data = res.data.result?.map((item, index) => ({
