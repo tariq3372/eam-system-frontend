@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CircularProgress, Container, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { checkInApi, checkIsCheckInApi, checkoutApi, leaveApi } from "../../api";
+import { checkInApi, checkIsCheckInApi, checkoutApi, leaveApi, leaveRequestApi } from "../../api";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -73,23 +73,39 @@ const Dashboard = () => {
 
   const handleLeave = () => {
     setIsLoading(true);
-    leaveApi({ id }, (res) => {
+    leaveRequestApi(id, (res) => {
       setIsLoading(false);
-      if (res.data) {
+      if(res.data) {
         Swal.fire(
           'Success',
-          "Your request processed successfully",
-          "success"
-        );
-        handleCheckInStatue();
+          'Your request is send to admin',
+          'success'
+        )
       } else {
         Swal.fire(
           'Error',
-          "Something went wrong, Please try again later",
-          "error"
-        );
+          'Something went wrong, Please try again later',
+          'error'
+        )
       }
     })
+    // leaveApi({ id }, (res) => {
+    //   setIsLoading(false);
+    //   if (res.data) {
+    //     Swal.fire(
+    //       'Success',
+    //       "Your request processed successfully",
+    //       "success"
+    //     );
+    //     handleCheckInStatue();
+    //   } else {
+    //     Swal.fire(
+    //       'Error',
+    //       "Something went wrong, Please try again later",
+    //       "error"
+    //     );
+    //   }
+    // })
   }
 
   if (loading || isLoading) return (

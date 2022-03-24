@@ -4,7 +4,8 @@ const routesName = {
         departments: '/department',
         jobTitles: '/jobTitle',
         employees: '/employee',
-        reports: '/report'
+        reports: '/report',
+        leaveRequests: '/leaveRequest',
     },
     employee: {
         dashboards: '/dashboard',

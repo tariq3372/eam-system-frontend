@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import * as urls from './urls';
 const axiosApi = axios.create({});
 const SERVER_URL = 'http://localhost:4000/api';
@@ -155,7 +154,25 @@ export const leaveApi = async(body, cb) => {
 }
 
 export const getEmployeeAttendanceReportsApi = async(params, cb) => {
-    axiosApi.get(`${urls.EMPLOYEE_ROUTES}//attendance-report`, { params })
+    axiosApi.get(`${urls.EMPLOYEE_ROUTES}/attendance-report`, { params })
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const leaveRequestApi = async(_id, cb) => {
+    axiosApi.post(`${urls.EMPLOYEE_ROUTES}/leave-request?_id=${_id}`)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const getLeaveRequestApi = async(cb) => {
+    axiosApi.get(`${urls.EMPLOYEE}/leave-request`)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
+
+export const updateLeaveRequestApi = async(_id, status, cb) => {
+    axiosApi.post(`${urls.EMPLOYEE}/leave-request?_id=${_id}&status=${status}`)
     .then(res => cb(res))
     .catch(err => cb(err));
 }

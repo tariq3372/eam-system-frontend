@@ -73,7 +73,7 @@ const JobTitle = () => {
         if(result.isConfirmed) {
           setShowOverlayLoading(true);
           deleteJobTitleApi(item._id, (res) => {
-            setShowOverlayLoading(true);
+            setShowOverlayLoading(false);
             if(res.data) {
                 Swal.fire(
                   'Deleted!',
