@@ -9,7 +9,8 @@ const routesName = {
     },
     employee: {
         dashboards: '/dashboard',
-        reports: '/report'
+        reports: '/report',
+        leaveRequest: '/leaveRequest'
     }
 }
 

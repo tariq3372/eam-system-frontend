@@ -13,7 +13,6 @@ const Report = () => {
   useEffect(() => {
     getEmployeeAttendanceReportsApi({ _id }, (res) => {
         if(res.data) {
-            console.log("data", res.data);
             setLoading(false);
             const { totalWorkingMinutes, totalLeaves, totalSalary, leaveRequestStatus } = res.data
             settotalWorkingMinutes(totalWorkingMinutes);

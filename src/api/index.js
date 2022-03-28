@@ -176,3 +176,9 @@ export const updateLeaveRequestApi = async(_id, status, cb) => {
     .then(res => cb(res))
     .catch(err => cb(err));
 }
+
+export const getEmployeeLeaveRequestApi = async(_id, cb) => {
+    axiosApi.get(`${urls.EMPLOYEE_ROUTES}/leave-request?_id=${_id}`)
+    .then(res => cb(res))
+    .catch(err => cb(err));
+}
